@@ -457,7 +457,7 @@ function placeModels(position) {
   });
   controlTempSprite.rotation.x = -Math.PI / 2;
   if (pinicioMesh) {
-    controlTempSprite.position.set(0.435, 0, 0);
+    controlTempSprite.position.set(0.397, 0, -.18);
     pinicioMesh.add(controlTempSprite);
   } else {
     controlTempSprite.position.set(0, -0.15, 0.25);
@@ -467,6 +467,9 @@ function placeModels(position) {
 
   scene.add(anchorGroup);
   modelsPlaced = true;
+
+  // Show control in OFF state (first frame of 'encender')
+  resetControlToFirstFrame('encender');
 
   // Start entrance animation
   startEntranceEffect();
@@ -699,20 +702,14 @@ function togglePower() {
     });
   }
 
-  // Play/reset control remote animation (once, no loop)
+  // Play 'encender' control animation on power on, rewind on power off
   if (controlMixer && controlAnimations.length > 0) {
-    controlAnimations.forEach((clip) => {
-      const action = controlMixer.clipAction(clip);
-      if (state.power) {
-        action.reset();
-        action.clampWhenFinished = true;
-        action.setLoop(THREE.LoopOnce);
-        action.play();
-      } else {
-        action.stop();
-        action.reset();
-      }
-    });
+    if (state.power) {
+      playControlAnimation('encender');
+    } else {
+      // Rewind 'encender' without playing
+      resetControlToFirstFrame('encender');
+    }
   }
 
   // Show/hide temp sprites based on power state
@@ -743,6 +740,7 @@ function decreaseTemp() {
   if (state.temperature <= 18) return;
   playButtonSound('beep');
   flashControl();
+  playControlAnimation('HEAT');
 
   // Cancel any running ramp
   if (tempInterval) clearInterval(tempInterval);
@@ -769,6 +767,7 @@ function increaseTemp() {
   if (state.temperature >= 38) return;
   playButtonSound('beep');
   flashControl();
+  playControlAnimation('COOL');
 
   // Cancel any running ramp
   if (tempInterval) clearInterval(tempInterval);
@@ -788,6 +787,50 @@ function increaseTemp() {
     replaceTempSprite();
     updateUI();
   }, intervalMs);
+}
+
+// ════════════════════════════════════════════════════════════
+// Control animation helpers
+// ════════════════════════════════════════════════════════════
+function playControlAnimation(name) {
+  if (!controlMixer || controlAnimations.length === 0) return;
+  // Stop all current control animations
+  stopAllControlAnimations();
+  // Find and play the named clip
+  const clip = controlAnimations.find(c => c.name === name);
+  if (clip) {
+    const action = controlMixer.clipAction(clip);
+    action.reset();
+    action.clampWhenFinished = true;
+    action.setLoop(THREE.LoopOnce);
+    action.play();
+  } else {
+    console.warn('Control animation not found:', name);
+  }
+}
+
+function stopAllControlAnimations() {
+  if (!controlMixer || controlAnimations.length === 0) return;
+  controlAnimations.forEach((clip) => {
+    const action = controlMixer.clipAction(clip);
+    action.stop();
+    action.reset();
+  });
+}
+
+function resetControlToFirstFrame(name) {
+  if (!controlMixer || controlAnimations.length === 0) return;
+  stopAllControlAnimations();
+  const clip = controlAnimations.find(c => c.name === name);
+  if (clip) {
+    const action = controlMixer.clipAction(clip);
+    action.reset();
+    action.time = 0;
+    action.clampWhenFinished = true;
+    action.setLoop(THREE.LoopOnce);
+    action.play();
+    action.paused = true;
+  }
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1347,7 +1390,7 @@ function startExternalExperience() {
     0.01,
     50
   );
-  extCamera.position.set(0, -0.3, 2.2);
+  extCamera.position.set(0, -0.45, 2.2);
 
   extRenderer = new THREE.WebGLRenderer({ antialias: true });
   extRenderer.setPixelRatio(window.devicePixelRatio);
