@@ -1,0 +1,526 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  font-family: 'Roboto Condensed', 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(180deg, #3a8fd4 0%, #1a5a9e 30%, #0a2a5a 70%, #030c1a 100%);
+}
+
+.font-lcd {
+  font-family: 'Orbitron', monospace;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ── Splash Screen ───────────────────────────────────────── */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #0a1628 0%, #0d2847 40%, #103a6e 100%);
+}
+
+#splash-content {
+  text-align: center;
+  padding: 40px 32px;
+  max-width: 380px;
+}
+
+#splash-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  color: #fff;
+  margin-bottom: 8px;
+  text-shadow: 0 0 30px rgba(110, 198, 255, 0.5);
+}
+
+#splash-title {
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+#splash-subtitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: #6ec6ff;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+#splash-hint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 40px;
+}
+
+#btn-start {
+  display: inline-block;
+  background: linear-gradient(135deg, #2196F3, #6ec6ff);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 52px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(33, 150, 243, 0.4);
+}
+
+#btn-start:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 32px rgba(33, 150, 243, 0.6);
+}
+
+#btn-start:active {
+  transform: scale(0.97);
+}
+
+#btn-external {
+  display: block;
+  margin: 16px auto 0;
+  background: linear-gradient(135deg, #1a7a3a, #38DC00);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 44px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(56, 220, 0, 0.3);
+}
+
+#btn-external:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 32px rgba(56, 220, 0, 0.5);
+}
+
+#btn-external:active {
+  transform: scale(0.97);
+}
+
+/* ── External equipment overlay ──────────────────────────── */
+#overlay-external {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#external-instructions {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 18px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#external-info {
+  position: absolute;
+  bottom: 24px;
+  left: 16px;
+  background: rgba(10, 10, 30, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 16px 20px;
+  color: #fff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+#external-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #38DC00;
+  letter-spacing: 0.5px;
+}
+
+#external-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#external-info li {
+  font-size: 13px;
+  padding: 4px 0;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#external-info li:last-child {
+  border-bottom: none;
+}
+
+.btn-back,
+#btn-back-splash {
+  position: absolute;
+  top: 104px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #38DC00;
+  border: 2px solid #38DC00;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: all;
+  transition: border-color 0.2s, color 0.2s;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-back:hover,
+#btn-back-splash:hover {
+  border-color: #4cff33;
+  color: #4cff33;
+}
+
+#btn-music-ext {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+#btn-music-ext:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #fff;
+}
+
+#btn-music-ext.playing {
+  border-color: #6ec6ff;
+  color: #6ec6ff;
+}
+
+/* ── Three.js container ──────────────────────────────────── */
+#container {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+#container canvas {
+  display: block;
+}
+
+/* ── Overlay ─────────────────────────────────────────────── */
+#overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── Instructions ────────────────────────────────────────── */
+#instructions {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 18px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── Info Panel ──────────────────────────────────────────── */
+#panel {
+  position: absolute;
+  bottom: 24px;
+  left: 16px;
+  background: rgba(10, 10, 30, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 16px 20px;
+  color: #fff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  min-width: auto;
+  pointer-events: none;
+}
+
+#panel h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #6ec6ff;
+  letter-spacing: 0.5px;
+}
+
+#panel .row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+#panel .label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#panel .value {
+  font-weight: 600;
+}
+
+#panel .value.on {
+  color: #4cff88;
+}
+
+#panel .value.off {
+  color: #ff5566;
+}
+
+/* ── Connecting lines SVG ─────────────────────────────────── */
+#connecting-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.conn-line {
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+
+.conn-dot {
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Control buttons (draggable circles with white stroke) ── */
+#control-buttons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ctrl-btn {
+  position: absolute;
+  width: 130px;
+  height: 80px;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  padding: 6px 0;
+  pointer-events: all;
+  user-select: none;
+  touch-action: none;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.ctrl-btn.dragging {
+  cursor: grabbing;
+  opacity: 0.85;
+}
+
+.ctrl-btn .btn-icon {
+  font-size: 34px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.ctrl-btn .btn-label {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.ctrl-btn.power-off {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.ctrl-btn.power-on {
+  border-color: #4cff88;
+  color: #4cff88;
+  box-shadow: 0 0 16px rgba(76, 255, 136, 0.35);
+}
+
+/* ── Music toggle button ──────────────────────────────────── */
+#btn-music {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+#btn-music:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #fff;
+}
+
+#btn-music.playing {
+  border-color: #6ec6ff;
+  color: #6ec6ff;
+}
+
+.ctrl-btn.mode-btn {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.ctrl-btn.temp-btn {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.ctrl-btn.heat-btn {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Responsive — Mobile (≤ 600px)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* Splash */
+  #splash-logo        { font-size: 36px; letter-spacing: 5px; }
+  #splash-title       { font-size: 14px; }
+  #splash-subtitle    { font-size: 20px; }
+  #splash-hint        { font-size: 11px; }
+  #btn-start          { font-size: 14px; padding: 13px 38px; letter-spacing: 2px; }
+  #btn-external        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; }
+
+  /* External overlay */
+  #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
+  #external-info       { padding: 10px 14px; border-radius: 12px; bottom: 16px; left: 10px; }
+  #external-info h3    { font-size: 12px; margin-bottom: 6px; }
+  #external-info li    { font-size: 11px; padding: 3px 0; }
+  .btn-back,
+  #btn-back-splash     { font-size: 18px; width: 36px; height: 36px; top: 88px; left: 10px; }
+  #btn-music-ext       { width: 34px; height: 34px; font-size: 15px; bottom: 18px; right: 10px; }
+
+  /* Instructions */
+  #instructions       { font-size: 13px; padding: 8px 16px; top: 10px; }
+
+  /* Info Panel */
+  #panel              { padding: 10px 14px; min-width: auto; border-radius: 12px; bottom: 16px; left: 10px; }
+  #panel h3           { font-size: 12px; margin-bottom: 6px; }
+  #panel .row         { font-size: 11px; padding: 3px 0; }
+
+  /* Control Buttons — 0.8X size, keep text/icon sizes */
+  .ctrl-btn           { width: 80px; height: 50px; border-radius: 10px; }
+  .ctrl-btn .btn-icon { font-size: 22px; }
+  .ctrl-btn .btn-label{ font-size: 10px; letter-spacing: 0.8px; }
+
+  /* Music toggle */
+  #btn-music          { width: 34px; height: 34px; font-size: 15px; bottom: 18px; right: 10px; top: auto; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Responsive — Large Desktop (≥ 1200px)
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 1200px) {
+  /* Splash */
+  #splash-logo        { font-size: 64px; letter-spacing: 10px; }
+  #splash-title       { font-size: 22px; }
+  #splash-subtitle    { font-size: 32px; }
+  #splash-hint        { font-size: 15px; }
+  #btn-start          { font-size: 19px; padding: 18px 60px; }
+  #btn-external        { font-size: 17px; padding: 16px 52px; }
+
+  /* Instructions */
+  #instructions       { font-size: 20px; padding: 14px 28px; }
+
+  /* Info Panel */
+  #panel              { padding: 20px 24px; min-width: 240px; }
+  #panel h3           { font-size: 17px; }
+  #panel .row         { font-size: 15px; }
+
+  /* Control Buttons */
+  .ctrl-btn           { width: 150px; height: 92px; border-radius: 18px; }
+  .ctrl-btn .btn-icon { font-size: 38px; }
+  .ctrl-btn .btn-label{ font-size: 16px; }
+
+  /* Music toggle */
+  #btn-music          { width: 46px; height: 46px; font-size: 20px; }
+}
