@@ -479,8 +479,8 @@ body {
   #splash-title       { font-size: 14px; }
   #splash-subtitle    { font-size: 20px; }
   #splash-hint        { font-size: 11px; }
-  #btn-start          { font-size: 14px; padding: 13px 38px; letter-spacing: 2px; }
-  #btn-external        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; }
+  #btn-start          { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
+  #btn-external        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
 
   /* External overlay */
   #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
