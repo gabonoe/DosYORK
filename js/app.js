@@ -104,7 +104,6 @@ let intActive = false;
 document.getElementById('btn-start').addEventListener('click', startExperience);
 document.getElementById('btn-external').addEventListener('click', startExternalExperience);
 document.getElementById('btn-internal').addEventListener('click', startInternalExperience);
-document.getElementById('btn-ar').addEventListener('click', startARExperience);
 
 function setupFadeInElements() {
   // Get all elements that should fade in
@@ -2334,53 +2333,5 @@ function stopInternalExperience() {
 
   // Show splash
   document.getElementById('overlay-internal').classList.add('hidden');
-  document.getElementById('splash').classList.remove('hidden');
-}
-
-// ════════════════════════════════════════════════════════════
-// AR Experience
-// ════════════════════════════════════════════════════════════
-function startARExperience() {
-  document.getElementById('splash').classList.add('hidden');
-  document.getElementById('overlay-ar').classList.remove('hidden');
-
-  const arViewer = document.getElementById('ar-viewer');
-  const arSelection = document.getElementById('ar-selection');
-
-  // Show selection, hide viewer
-  arSelection.classList.remove('hidden');
-  arViewer.classList.add('hidden');
-
-  // Card click handlers
-  document.querySelectorAll('.ar-card').forEach((card) => {
-    card.onclick = () => {
-      const modelPath = card.dataset.model;
-      arViewer.setAttribute('src', modelPath);
-      arViewer.setAttribute('autoplay', '');
-      arSelection.classList.add('hidden');
-      arViewer.classList.remove('hidden');
-    };
-  });
-
-  // Back button
-  document.getElementById('btn-back-ar').onclick = () => {
-    stopARExperience();
-  };
-}
-
-function stopARExperience() {
-  const arViewer = document.getElementById('ar-viewer');
-  const arSelection = document.getElementById('ar-selection');
-
-  // If viewer is visible, go back to selection
-  if (!arViewer.classList.contains('hidden')) {
-    arViewer.removeAttribute('src');
-    arViewer.classList.add('hidden');
-    arSelection.classList.remove('hidden');
-    return;
-  }
-
-  // If on selection screen, go back to splash
-  document.getElementById('overlay-ar').classList.add('hidden');
   document.getElementById('splash').classList.remove('hidden');
 }
