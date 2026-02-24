@@ -1892,7 +1892,7 @@ function startExternalExperience() {
       extScene.add(extModel);
 
       // Fade in over 2 seconds
-      const fadeDuration = 2000; // 2 seconds
+      const fadeDuration = 1000; // 1 seconds
       const startTime = Date.now();
       
       function fadeIn() {
