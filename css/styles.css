@@ -171,7 +171,7 @@ body {
 }
 
 #external-info li {
-  font-size: 13px;
+  font-size: 16px;
   padding: 4px 0;
   color: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -184,15 +184,15 @@ body {
 .btn-back,
 #btn-back-splash {
   position: absolute;
-  top: 104px;
+  top: 50px;
   left: 16px;
   background: rgba(0, 0, 0, 0.35);
   color: #38DC00;
   border: 2px solid #38DC00;
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  font-size: 22px;
+  width: 55px;
+  height: 55px;
+  font-size: 29px;
   font-weight: 900;
   cursor: pointer;
   backdrop-filter: blur(6px);
@@ -474,9 +474,9 @@ body {
   #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
   #external-info       { padding: 10px 14px; border-radius: 12px; bottom: 16px; left: 10px; }
   #external-info h3    { font-size: 12px; margin-bottom: 6px; }
-  #external-info li    { font-size: 11px; padding: 3px 0; }
+  #external-info li    { font-size: 13px; padding: 3px 0; }
   .btn-back,
-  #btn-back-splash     { font-size: 18px; width: 36px; height: 36px; top: 88px; left: 10px; }
+  #btn-back-splash     { font-size: 18px; width: 36px; height: 36px; top: 50px; left: 10px; }
   #btn-music-ext       { width: 34px; height: 34px; font-size: 15px; bottom: 18px; right: 10px; }
 
   /* Instructions */

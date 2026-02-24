@@ -11,6 +11,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 let state = {
   power: false,
   mode: "cool",
+  heatMode: false,
   temperature: 24
 };
 
@@ -22,6 +23,9 @@ let modelsPlaced = false;
 
 // Models
 let miniSplitModel = null;
+let coolModel = null;
+let heatModel = null;
+let modeModel = null;
 let controlModel = null;
 let anchorGroup = null;
 let originalMaterials = [];
@@ -36,6 +40,12 @@ let controlTempSprite = null;
 // Animation
 let miniMixer = null;
 let miniAnimations = [];
+let coolMixer = null;
+let coolAnimations = [];
+let heatMixer = null;
+let heatAnimations = [];
+let modeMixer = null;
+let modeAnimations = [];
 let controlMixer = null;
 let controlAnimations = [];
 let clock = new THREE.Clock();
@@ -47,6 +57,16 @@ let tempInterval = null;
 let entranceStartTime = 0;
 let entranceActive = false;
 const ENTRANCE_DURATION = 1.8; // seconds
+
+// Wind sound for fan mode
+let windSoundSource = null;
+let windGainNode = null;
+let windNoise = null;
+
+// Cold air sound for cool mode
+let coldAirSoundSource = null;
+let coldAirGainNode = null;
+let coldAirNoise = null;
 
 // Model loading tracker
 let modelsLoadedCount = 0;
@@ -361,6 +381,117 @@ function loadModels() {
     (err) => console.error('Error loading miniB.glb:', err)
   );
 
+  // Load cool.glb
+  loader.load(
+    'models/cool.glb',
+    (gltf) => {
+      coolModel = gltf.scene;
+      coolModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material = child.material.clone();
+        }
+      });
+      coolModel.scale.set(2, 2, 2);
+      coolModel.visible = false; // Start hidden
+
+      // Pantalla (LED screen): restore shader + add emissive glow for bloom
+      const pantallaCool = coolModel.getObjectByName('pantalla');
+      if (pantallaCool && pantallaCool.isMesh) {
+        pantallaCool.material.transparent = true;
+        pantallaCool.material.opacity = pantallaCool.material.opacity || 1;
+        pantallaCool.material.emissive = new THREE.Color(0x00aaff);
+        pantallaCool.material.emissiveIntensity = 5.0;
+        pantallaCool.material.toneMapped = false;
+      }
+
+      // Setup animation mixer if animations exist
+      if (gltf.animations && gltf.animations.length > 0) {
+        coolMixer = new THREE.AnimationMixer(coolModel);
+        coolAnimations = gltf.animations;
+        console.log('Cool animations:', coolAnimations.map(a => a.name));
+      }
+      console.log('Cool model loaded');
+      modelsLoadedCount++;
+      autoPlaceWhenReady();
+    },
+    undefined,
+    (err) => console.error('Error loading cool.glb:', err)
+  );
+
+  // Load heat.glb
+  loader.load(
+    'models/heat.glb',
+    (gltf) => {
+      heatModel = gltf.scene;
+      heatModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material = child.material.clone();
+        }
+      });
+      heatModel.scale.set(2, 2, 2);
+      heatModel.visible = false; // Start hidden
+
+      // Pantalla (LED screen): restore shader + add emissive glow for bloom
+      const pantallaHeat = heatModel.getObjectByName('pantalla');
+      if (pantallaHeat && pantallaHeat.isMesh) {
+        pantallaHeat.material.transparent = true;
+        pantallaHeat.material.opacity = pantallaHeat.material.opacity || 1;
+        pantallaHeat.material.emissive = new THREE.Color(0x00aaff);
+        pantallaHeat.material.emissiveIntensity = 5.0;
+        pantallaHeat.material.toneMapped = false;
+      }
+
+      // Setup animation mixer if animations exist
+      if (gltf.animations && gltf.animations.length > 0) {
+        heatMixer = new THREE.AnimationMixer(heatModel);
+        heatAnimations = gltf.animations;
+        console.log('Heat animations:', heatAnimations.map(a => a.name));
+      }
+      console.log('Heat model loaded');
+      modelsLoadedCount++;
+      autoPlaceWhenReady();
+    },
+    undefined,
+    (err) => console.error('Error loading heat.glb:', err)
+  );
+
+  // Load mode.glb
+  loader.load(
+    'models/mode.glb',
+    (gltf) => {
+      modeModel = gltf.scene;
+      modeModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material = child.material.clone();
+        }
+      });
+      modeModel.scale.set(2, 2, 2);
+      modeModel.visible = false; // Start hidden
+
+      // Pantalla (LED screen): restore shader + add emissive glow for bloom
+      const pantallaMode = modeModel.getObjectByName('pantalla');
+      if (pantallaMode && pantallaMode.isMesh) {
+        pantallaMode.material.transparent = true;
+        pantallaMode.material.opacity = pantallaMode.material.opacity || 1;
+        pantallaMode.material.emissive = new THREE.Color(0x00aaff);
+        pantallaMode.material.emissiveIntensity = 5.0;
+        pantallaMode.material.toneMapped = false;
+      }
+
+      // Setup animation mixer if animations exist
+      if (gltf.animations && gltf.animations.length > 0) {
+        modeMixer = new THREE.AnimationMixer(modeModel);
+        modeAnimations = gltf.animations;
+        console.log('Mode animations:', modeAnimations.map(a => a.name));
+      }
+      console.log('Mode model loaded');
+      modelsLoadedCount++;
+      autoPlaceWhenReady();
+    },
+    undefined,
+    (err) => console.error('Error loading mode.glb:', err)
+  );
+
   loader.load(
     'models/controlB.glb',
     (gltf) => {
@@ -393,7 +524,7 @@ function loadModels() {
 // Auto-place when both models are loaded
 // ════════════════════════════════════════════════════════════
 function autoPlaceWhenReady() {
-  if (modelsLoadedCount < 2 || modelsPlaced) return;
+  if (modelsLoadedCount < 5 || modelsPlaced) return;
   placeModels(new THREE.Vector3(0, 0, 0));
 }
 
@@ -402,7 +533,7 @@ function autoPlaceWhenReady() {
 // ════════════════════════════════════════════════════════════
 function placeModels(position) {
   if (modelsPlaced) return;
-  if (!miniSplitModel || !controlModel) return;
+  if (!miniSplitModel || !controlModel || !coolModel || !heatModel || !modeModel) return;
 
   anchorGroup = new THREE.Group();
   anchorGroup.position.copy(position);
@@ -410,6 +541,21 @@ function placeModels(position) {
   // Mini split — raised higher, pushed back
   anchorGroup.add(miniSplitModel);
   miniSplitModel.position.set(0, 0.7, -0.5);
+
+  // Cool model — same position as mini split, start hidden
+  anchorGroup.add(coolModel);
+  coolModel.position.set(0, 0.7, -0.5);
+  coolModel.visible = false;
+
+  // Heat model — same position as mini split, start hidden
+  anchorGroup.add(heatModel);
+  heatModel.position.set(0, 0.7, -0.5);
+  heatModel.visible = false;
+
+  // Mode model — same position as mini split, start hidden
+  anchorGroup.add(modeModel);
+  modeModel.position.set(0, 0.7, -0.5);
+  modeModel.visible = false;
 
   // Control remote — centered, raised
   anchorGroup.add(controlModel);
@@ -681,6 +827,7 @@ function showPowerAlert() {
 // ════════════════════════════════════════════════════════════
 function togglePower() {
   state.power = !state.power;
+  state.heatMode = false; // Reset heat mode when power toggles
   playButtonSound(state.power ? 'on' : 'off');
 
   // Cancel any running temp ramp
@@ -720,6 +867,22 @@ function togglePower() {
     controlTempSprite.visible = state.power;
   }
 
+  // Hide cool and heat models when power is off
+  if (coolModel && !state.power) {
+    coolModel.visible = false;
+  }
+  if (heatModel && !state.power) {
+    heatModel.visible = false;
+  }
+  if (modeModel && !state.power) {
+    modeModel.visible = false;
+  }
+  
+  // Stop wind sound when power is off
+  if (!state.power) {
+    stopWindSound();
+  }
+
   updateUI();
   updatePowerButton();
   flashControl();
@@ -729,7 +892,38 @@ function toggleMode() {
   if (!state.power) { showPowerAlert(); return; }
   playButtonSound('click');
 
-  state.mode = state.mode === 'cool' ? 'fan' : 'cool';
+  // Always activate fan mode when pressed
+  state.mode = 'fan';
+  state.heatMode = false; // Reset heat mode when mode changes
+  
+  // Play ventilator animation on control remote
+  playControlAnimation('ventilador');
+
+  // Hide heat model when mode changes
+  if (heatModel) {
+    heatModel.visible = false;
+  }
+
+  // Always activate fan mode when MODE is pressed
+  // Hide cool model when switching to fan
+  if (coolModel) {
+    coolModel.visible = false;
+  }
+  // Show mode model if it exists
+  if (modeModel) {
+    modeModel.visible = true;
+    if (modeMixer && modeAnimations.length > 0) {
+      modeAnimations.forEach((clip) => {
+        const action = modeMixer.clipAction(clip);
+        action.reset();
+        action.clampWhenFinished = true;
+        action.setLoop(THREE.LoopOnce);
+        action.play();
+      });
+    }
+    // Start wind sound for fan mode
+    startWindSound();
+  }
 
   updateUI();
   flashControl();
@@ -742,6 +936,37 @@ function decreaseTemp() {
   flashControl();
   playControlAnimation('HEAT');
 
+  // Set heat mode inactive and cool mode active
+  state.heatMode = false;
+  state.mode = 'cool';
+
+  // Stop wind sound when using temperature controls
+  stopWindSound();
+
+  // Update UI immediately
+  updateUI();
+
+  // Show cool model and play its animation, hide heat model
+  if (coolModel) {
+    coolModel.visible = true;
+    if (coolMixer && coolAnimations.length > 0) {
+      coolAnimations.forEach((clip) => {
+        const action = coolMixer.clipAction(clip);
+        action.reset();
+        action.clampWhenFinished = true;
+        action.setLoop(THREE.LoopOnce);
+        action.play();
+      });
+    }
+  }
+  if (heatModel) {
+    heatModel.visible = false;
+  }
+  if (modeModel) {
+    modeModel.visible = false;
+  }
+
+  
   // Cancel any running ramp
   if (tempInterval) clearInterval(tempInterval);
 
@@ -769,6 +994,36 @@ function increaseTemp() {
   flashControl();
   playControlAnimation('COOL');
 
+  // Set heat mode active
+  state.heatMode = true;
+
+  // Stop wind sound when using temperature controls
+  stopWindSound();
+
+  // Update UI immediately
+  updateUI();
+
+  // Hide cool model and show heat model
+  if (coolModel) {
+    coolModel.visible = false;
+  }
+  if (heatModel) {
+    heatModel.visible = true;
+    if (heatMixer && heatAnimations.length > 0) {
+      heatAnimations.forEach((clip) => {
+        const action = heatMixer.clipAction(clip);
+        action.reset();
+        action.clampWhenFinished = true;
+        action.setLoop(THREE.LoopOnce);
+        action.play();
+      });
+    }
+  }
+  if (modeModel) {
+    modeModel.visible = false;
+  }
+
+  
   // Cancel any running ramp
   if (tempInterval) clearInterval(tempInterval);
 
@@ -900,11 +1155,17 @@ function resetExperience() {
   // Stop music
   if (musicPlaying) stopMusic();
 
+  // Stop wind sound
+  stopWindSound();
+
   // Stop render loop
   if (renderer) renderer.setAnimationLoop(null);
 
   // Stop all animations
   if (miniMixer) miniMixer.stopAllAction();
+  if (coolMixer) coolMixer.stopAllAction();
+  if (heatMixer) heatMixer.stopAllAction();
+  if (modeMixer) modeMixer.stopAllAction();
   if (controlMixer) controlMixer.stopAllAction();
 
   // Remove scene objects
@@ -925,10 +1186,14 @@ function resetExperience() {
   // Reset state
   state.power = false;
   state.mode = 'cool';
+  state.heatMode = false;
   state.temperature = 24;
   modelsPlaced = false;
   modelsLoadedCount = 0;
   miniSplitModel = null;
+  coolModel = null;
+  heatModel = null;
+  modeModel = null;
   controlModel = null;
   anchorGroup = null;
   originalMaterials = [];
@@ -937,6 +1202,12 @@ function resetExperience() {
   controlTempSprite = null;
   miniMixer = null;
   miniAnimations = [];
+  coolMixer = null;
+  coolAnimations = [];
+  heatMixer = null;
+  heatAnimations = [];
+  modeMixer = null;
+  modeAnimations = [];
   controlMixer = null;
   controlAnimations = [];
   entranceActive = false;
@@ -957,7 +1228,16 @@ function updateUI() {
 
   statusEl.textContent = state.power ? 'Encendido' : 'Apagado';
   statusEl.className = 'value ' + (state.power ? 'on' : 'off');
-  modeEl.textContent = state.mode === 'cool' ? 'Frío' : 'Ventilador';
+  
+  // Update mode display with proper priority
+  if (state.heatMode) {
+    modeEl.textContent = 'Calor';
+  } else if (state.mode === 'fan') {
+    modeEl.textContent = 'Ventilador';
+  } else {
+    modeEl.textContent = 'Frío';
+  }
+  
   tempEl.textContent = state.temperature + '°C';
 }
 
@@ -967,6 +1247,9 @@ function updateUI() {
 function render() {
   const delta = clock.getDelta();
   if (miniMixer) miniMixer.update(delta);
+  if (coolMixer) coolMixer.update(delta);
+  if (heatMixer) heatMixer.update(delta);
+  if (modeMixer) modeMixer.update(delta);
   if (controlMixer) controlMixer.update(delta);
   updateEntranceEffect();
   orbitControls.update();
@@ -1180,6 +1463,139 @@ function playButtonSound(type) {
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
     osc.start(now);
     osc.stop(now + 0.1);
+  }
+}
+
+// Wind sound for fan mode
+function startWindSound() {
+  if (!audioCtx) return;
+  ensureAudioResumed();
+  
+  // Stop any existing wind sound before starting new one
+  if (windNoise) {
+    stopWindSound();
+  }
+
+  // Create white noise using ScriptProcessorNode
+  const bufferSize = 4096;
+  windNoise = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+  windNoise.onaudioprocess = (e) => {
+    const output = e.outputBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1; // White noise
+    }
+  };
+
+  // Create gain node for volume control
+  windGainNode = audioCtx.createGain();
+  windGainNode.gain.value = 0.25; // Moderate-high volume
+
+  // Create filter to shape the noise (low-pass for wind-like sound)
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 800; // Low frequency for wind
+  filter.Q.value = 1;
+
+  // Connect the nodes
+  windNoise.connect(filter);
+  filter.connect(windGainNode);
+  windGainNode.connect(audioCtx.destination);
+
+  // Start the noise
+  windNoise.start();
+}
+
+function stopWindSound() {
+  if (!windNoise) return;
+  
+  // Immediate cleanup to prevent multiple instances
+  if (windNoise) {
+    windNoise.disconnect();
+    windNoise = null;
+  }
+  if (windGainNode) {
+    windGainNode.disconnect();
+    windGainNode = null;
+  }
+  windSoundSource = null;
+}
+
+// Cold air sound for cool mode
+function startColdAirSound() {
+  if (!audioCtx || coldAirSoundSource) return;
+  ensureAudioResumed();
+
+  // Create white noise using ScriptProcessorNode
+  const bufferSize = 4096;
+  coldAirNoise = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+  coldAirNoise.onaudioprocess = (e) => {
+    const output = e.outputBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1; // White noise
+    }
+  };
+
+  // Create gain node for volume control
+  coldAirGainNode = audioCtx.createGain();
+  coldAirGainNode.gain.value = 0.28; // Higher volume for exterior wind
+
+  // Create filters to shape the noise (exterior wind + snow texture)
+  const filter1 = audioCtx.createBiquadFilter();
+  filter1.type = 'lowpass';
+  filter1.frequency.value = 1200; // Lower frequency for wind
+  filter1.Q.value = 1;
+
+  const filter2 = audioCtx.createBiquadFilter();
+  filter2.type = 'bandpass';
+  filter2.frequency.value = 800; // Mid frequency for snow texture
+  filter2.Q.value = 2;
+
+  // Add a subtle high-frequency component for snow sparkle
+  const filter3 = audioCtx.createBiquadFilter();
+  filter3.type = 'highpass';
+  filter3.frequency.value = 3000; // High frequency for snow particles
+  filter3.Q.value = 1;
+
+  // Connect the nodes
+  coldAirNoise.connect(filter1);
+  coldAirNoise.connect(filter3); // Direct high-frequency snow component
+  filter1.connect(filter2);
+  filter2.connect(coldAirGainNode);
+  filter3.connect(coldAirGainNode); // Mix snow sparkle with main sound
+  coldAirGainNode.connect(audioCtx.destination);
+
+  // Start the noise
+  coldAirNoise.start();
+}
+
+function stopColdAirSound() {
+  if (!coldAirSoundSource && !coldAirNoise) return;
+  
+  // Fade out smoothly
+  if (coldAirGainNode) {
+    coldAirGainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+    setTimeout(() => {
+      if (coldAirNoise) {
+        coldAirNoise.disconnect();
+        coldAirNoise = null;
+      }
+      if (coldAirGainNode) {
+        coldAirGainNode.disconnect();
+        coldAirGainNode = null;
+      }
+      coldAirSoundSource = null;
+    }, 500);
+  } else {
+    // Immediate cleanup if no gain node
+    if (coldAirNoise) {
+      coldAirNoise.disconnect();
+      coldAirNoise = null;
+    }
+    if (coldAirGainNode) {
+      coldAirGainNode.disconnect();
+      coldAirGainNode = null;
+    }
+    coldAirSoundSource = null;
   }
 }
 
