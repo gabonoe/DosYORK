@@ -652,9 +652,12 @@ body {
   /* External overlay */
   #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
   #external-info       { padding: 10px 14px; border-radius: 12px; bottom: 16px; left: 10px; }
+  #internal-info       { padding: 10px 14px; border-radius: 12px; bottom: 16px; left: 10px; }
   #internal-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
   #external-info h3    { font-size: 12px; margin-bottom: 6px; }
+  #internal-info h3    { font-size: 12px; margin-bottom: 6px; }
   #external-info li    { font-size: 13px; padding: 3px 0; }
+  #internal-info li    { font-size: 13px; padding: 3px 0; }
   .btn-back,
   #btn-back-splash,
   #btn-back-splash-internal { font-size: 18px; width: 36px; height: 36px; top: 50px; left: 10px; }
