@@ -655,7 +655,8 @@ body {
   #external-info h3    { font-size: 12px; margin-bottom: 6px; }
   #external-info li    { font-size: 13px; padding: 3px 0; }
   .btn-back,
-  #btn-back-splash     { font-size: 18px; width: 36px; height: 36px; top: 50px; left: 10px; }
+  #btn-back-splash,
+  #btn-back-splash-internal { font-size: 18px; width: 36px; height: 36px; top: 50px; left: 10px; }
   #btn-music-ext       { width: 34px; height: 34px; font-size: 15px; bottom: 18px; right: 10px; }
 
   /* Instructions */
