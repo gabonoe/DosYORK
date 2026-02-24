@@ -1232,10 +1232,13 @@ function updateUI() {
   // Update mode display with proper priority
   if (state.heatMode) {
     modeEl.textContent = 'Calor';
+    modeEl.className = 'value heat-mode';
   } else if (state.mode === 'fan') {
     modeEl.textContent = 'Ventilador';
+    modeEl.className = 'value fan-mode';
   } else {
     modeEl.textContent = 'Frío';
+    modeEl.className = 'value cool-mode';
   }
   
   tempEl.textContent = state.temperature + '°C';
@@ -1488,7 +1491,12 @@ function startWindSound() {
 
   // Create gain node for volume control
   windGainNode = audioCtx.createGain();
-  windGainNode.gain.value = 0.25; // Moderate-high volume
+  windGainNode.gain.value = 0; // Start at 0 for fade-in
+  
+  // Schedule fade-in from 0 to 0.4 over 1 second
+  const now = audioCtx.currentTime;
+  windGainNode.gain.setValueAtTime(0, now);
+  windGainNode.gain.linearRampToValueAtTime(0.4, now + 1.0);
 
   // Create filter to shape the noise (low-pass for wind-like sound)
   const filter = audioCtx.createBiquadFilter();
@@ -1607,7 +1615,7 @@ function startMusic() {
   document.getElementById('btn-music-ext')?.classList.add('playing');
 
   const master = audioCtx.createGain();
-  master.gain.value = 0.18;
+  master.gain.value = 0.5;
   master.connect(audioCtx.destination);
 
   // ── Compressor for glue ──
@@ -1871,11 +1879,38 @@ function startExternalExperience() {
       extModel.scale.set(0.175, 0.175, 0.175);
       extModel.position.set(0, -0.95, 0);
 
+      // Start with model invisible for fade-in
       extModel.traverse((child) => {
-        if (child.isMesh) child.castShadow = true;
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.material = child.material.clone();
+          child.material.transparent = true;
+          child.material.opacity = 0;
+        }
       });
 
       extScene.add(extModel);
+
+      // Fade in over 2 seconds
+      const fadeDuration = 2000; // 2 seconds
+      const startTime = Date.now();
+      
+      function fadeIn() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / fadeDuration, 1);
+        
+        extModel.traverse((child) => {
+          if (child.isMesh && child.material.transparent) {
+            child.material.opacity = progress;
+          }
+        });
+        
+        if (progress < 1) {
+          requestAnimationFrame(fadeIn);
+        }
+      }
+      
+      fadeIn();
 
       // Auto-play all animations in loop
       if (gltf.animations && gltf.animations.length > 0) {

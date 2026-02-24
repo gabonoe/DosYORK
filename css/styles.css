@@ -10,31 +10,6 @@ body {
   background: linear-gradient(180deg, #3a8fd4 0%, #1a5a9e 30%, #0a2a5a 70%, #030c1a 100%);
 }
 
-/* ── Global Animations ──────────────────────────────────── */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(110, 198, 255, 0.2); }
-  50%      { box-shadow: 0 0 20px rgba(110, 198, 255, 0.5); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes dash-flow {
-  to { stroke-dashoffset: -20; }
-}
-
 .font-lcd {
   font-family: 'Orbitron', monospace;
 }
@@ -52,7 +27,6 @@ body {
   align-items: center;
   justify-content: center;
   background: linear-gradient(160deg, #0a1628 0%, #0d2847 40%, #103a6e 100%);
-  animation: fadeIn 0.6s ease-out;
 }
 
 #splash-content {
@@ -69,7 +43,6 @@ body {
   color: #fff;
   margin-bottom: 8px;
   text-shadow: 0 0 30px rgba(110, 198, 255, 0.5);
-  animation: fadeInUp 0.8s ease-out;
 }
 
 #splash-title {
@@ -79,7 +52,6 @@ body {
   margin-bottom: 20px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  animation: fadeInUp 0.8s ease-out 0.15s both;
 }
 
 #splash-subtitle {
@@ -88,14 +60,12 @@ body {
   color: #6ec6ff;
   line-height: 1.3;
   margin-bottom: 12px;
-  animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 #splash-hint {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.45);
   margin-bottom: 40px;
-  animation: fadeInUp 0.8s ease-out 0.45s both;
 }
 
 #btn-start {
@@ -109,11 +79,8 @@ body {
   font-weight: 700;
   letter-spacing: 3px;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 24px rgba(33, 150, 243, 0.4);
-  animation: fadeInUp 0.8s ease-out 0.6s both;
-  position: relative;
-  overflow: hidden;
 }
 
 #btn-start:hover {
@@ -122,8 +89,7 @@ body {
 }
 
 #btn-start:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 12px rgba(33, 150, 243, 0.5);
+  transform: scale(0.97);
 }
 
 #btn-external {
@@ -138,11 +104,8 @@ body {
   font-weight: 700;
   letter-spacing: 2px;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 24px rgba(56, 220, 0, 0.3);
-  animation: fadeInUp 0.8s ease-out 0.75s both;
-  position: relative;
-  overflow: hidden;
 }
 
 #btn-external:hover {
@@ -151,8 +114,7 @@ body {
 }
 
 #btn-external:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 12px rgba(56, 220, 0, 0.4);
+  transform: scale(0.97);
 }
 
 /* ── External equipment overlay ──────────────────────────── */
@@ -316,12 +278,6 @@ body {
   -webkit-backdrop-filter: blur(8px);
   pointer-events: none;
   white-space: nowrap;
-  animation: fadeIn 0.5s ease-out;
-  transition: opacity 1.5s ease;
-}
-
-#instructions.fade-out {
-  opacity: 0;
 }
 
 /* ── Info Panel ──────────────────────────────────────────── */
@@ -329,8 +285,8 @@ body {
   position: absolute;
   bottom: 24px;
   left: 16px;
-  background: rgba(10, 10, 30, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(10, 10, 30, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   padding: 16px 20px;
   color: #fff;
@@ -338,8 +294,6 @@ body {
   -webkit-backdrop-filter: blur(12px);
   min-width: auto;
   pointer-events: none;
-  animation: fadeInUp 0.6s ease-out 0.3s both;
-  transition: border-color 0.4s ease;
 }
 
 #panel h3 {
@@ -364,32 +318,26 @@ body {
 
 #panel .value {
   font-weight: 600;
-  transition: color 0.4s ease, text-shadow 0.4s ease;
 }
 
 #panel .value.on {
   color: #4cff88;
-  text-shadow: 0 0 8px rgba(76, 255, 136, 0.4);
 }
 
 #panel .value.off {
   color: #ff5566;
-  text-shadow: 0 0 8px rgba(255, 85, 102, 0.3);
 }
 
 #panel .value.cool-mode {
   color: #87ceff;
-  text-shadow: 0 0 8px rgba(135, 206, 255, 0.4);
 }
 
 #panel .value.heat-mode {
   color: #ffd272;
-  text-shadow: 0 0 8px rgba(255, 210, 114, 0.4);
 }
 
 #panel .value.fan-mode {
   color: #ffffff;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
 /* ── Connecting lines SVG ─────────────────────────────────── */
@@ -406,12 +354,10 @@ body {
   stroke: rgba(255, 255, 255, 0.35);
   stroke-width: 1.5;
   stroke-dasharray: 6 4;
-  animation: dash-flow 1.5s linear infinite;
 }
 
 .conn-dot {
   fill: rgba(255, 255, 255, 0.7);
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
 }
 
 /* ── Control buttons (draggable circles with white stroke) ── */
@@ -426,10 +372,10 @@ body {
   width: 130px;
   height: 80px;
   border-radius: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: rgba(255, 255, 255, 0.9);
   cursor: grab;
   display: flex;
@@ -437,14 +383,13 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
   -webkit-tap-highlight-color: transparent;
   padding: 6px 0;
   pointer-events: all;
   user-select: none;
   touch-action: none;
   font-family: 'Roboto Condensed', sans-serif;
-  animation: fadeIn 0.5s ease-out 0.5s both;
 }
 
 .ctrl-btn.dragging {
@@ -456,7 +401,6 @@ body {
   font-size: 34px;
   line-height: 1;
   pointer-events: none;
-  transition: transform 0.2s ease;
 }
 
 .ctrl-btn .btn-label {
@@ -465,32 +409,21 @@ body {
   letter-spacing: 1.2px;
   text-transform: uppercase;
   pointer-events: none;
-  transition: opacity 0.3s ease;
 }
 
 .ctrl-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 1);
-  transform: scale(1.03);
-}
-
-.ctrl-btn:active {
-  transform: scale(0.96);
 }
 
 .ctrl-btn.power-off {
-  border-color: rgba(255, 85, 102, 0.5);
-  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .ctrl-btn.power-on {
   border-color: #4cff88;
   color: #4cff88;
-  box-shadow: 0 0 20px rgba(76, 255, 136, 0.3), inset 0 0 12px rgba(76, 255, 136, 0.05);
-}
-
-.ctrl-btn.power-on .btn-icon {
-  filter: drop-shadow(0 0 6px rgba(76, 255, 136, 0.6));
+  box-shadow: 0 0 16px rgba(76, 255, 136, 0.35);
 }
 
 /* ── Music toggle button ──────────────────────────────────── */
@@ -526,48 +459,15 @@ body {
 }
 
 .ctrl-btn.mode-btn {
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.ctrl-btn.mode-btn:hover {
-  border-color: #b8b8ff;
-  color: #d4d4ff;
-}
-
-.ctrl-btn.mode-btn.active {
-  border-color: #b8b8ff;
-  color: #d4d4ff;
-  box-shadow: 0 0 16px rgba(184, 184, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .ctrl-btn.temp-btn {
-  border-color: rgba(135, 206, 255, 0.5);
-}
-
-.ctrl-btn.temp-btn:hover {
-  border-color: #87ceff;
-  color: #87ceff;
-}
-
-.ctrl-btn.temp-btn.active {
-  border-color: #87ceff;
-  color: #87ceff;
-  box-shadow: 0 0 16px rgba(135, 206, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .ctrl-btn.heat-btn {
-  border-color: rgba(255, 210, 114, 0.5);
-}
-
-.ctrl-btn.heat-btn:hover {
-  border-color: #ffd272;
-  color: #ffd272;
-}
-
-.ctrl-btn.heat-btn.active {
-  border-color: #ffd272;
-  color: #ffd272;
-  box-shadow: 0 0 16px rgba(255, 210, 114, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 /* ══════════════════════════════════════════════════════════════
