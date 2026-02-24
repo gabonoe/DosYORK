@@ -1866,7 +1866,7 @@ function startExternalExperience() {
   const floorMat = new THREE.ShadowMaterial({ opacity: 0.35 });
   const floor = new THREE.Mesh(floorGeo, floorMat);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.set(0, -0.95, 0);
+  floor.position.set(0, -0.85, 0);
   floor.receiveShadow = true;
   extScene.add(floor);
 
@@ -1877,7 +1877,7 @@ function startExternalExperience() {
     (gltf) => {
       extModel = gltf.scene;
       extModel.scale.set(0.175, 0.175, 0.175);
-      extModel.position.set(0, -0.95, 0);
+      extModel.position.set(0, -0.85, 0);
 
       // Start with model invisible for fade-in
       extModel.traverse((child) => {
