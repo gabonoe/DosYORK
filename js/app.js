@@ -91,11 +91,19 @@ let extMixer = null;
 let extClock = new THREE.Clock();
 let extActive = false;
 
+// Internal experience
+let intScene, intCamera, intRenderer, intOrbitControls, intComposer;
+let intModel = null;
+let intMixer = null;
+let intClock = new THREE.Clock();
+let intActive = false;
+
 // ════════════════════════════════════════════════════════════
 // Splash screen
 // ════════════════════════════════════════════════════════════
 document.getElementById('btn-start').addEventListener('click', startExperience);
 document.getElementById('btn-external').addEventListener('click', startExternalExperience);
+document.getElementById('btn-internal').addEventListener('click', startInternalExperience);
 
 function startExperience() {
   document.getElementById('splash').classList.add('hidden');
@@ -1892,7 +1900,7 @@ function startExternalExperience() {
       extScene.add(extModel);
 
       // Fade in over 2 seconds
-      const fadeDuration = 1000; // 1 seconds
+      const fadeDuration = 1500; // 1 seconds
       const startTime = Date.now();
       
       function fadeIn() {
@@ -1994,5 +2002,238 @@ function stopExternalExperience() {
 
   // Show splash
   document.getElementById('overlay-external').classList.add('hidden');
+  document.getElementById('splash').classList.remove('hidden');
+}
+
+function startInternalExperience() {
+  document.getElementById('splash').classList.add('hidden');
+  document.getElementById('overlay-internal').classList.remove('hidden');
+
+  // Init audio context if not already done
+  if (!audioCtx) initAudio();
+
+  // Create scene
+  intScene = new THREE.Scene();
+
+  // Create gradient background (same as external)
+  const bgCanvas = document.createElement('canvas');
+  bgCanvas.width = 2;
+  bgCanvas.height = 512;
+  const bgCtx = bgCanvas.getContext('2d');
+  const grad = bgCtx.createLinearGradient(0, 0, 0, 512);
+  grad.addColorStop(0, '#3a8fd4');
+  grad.addColorStop(0.3, '#1a5a9e');
+  grad.addColorStop(0.7, '#0a2a5a');
+  grad.addColorStop(1, '#030c1a');
+  bgCtx.fillStyle = grad;
+  bgCtx.fillRect(0, 0, 2, 512);
+  intScene.background = new THREE.CanvasTexture(bgCanvas);
+
+  // Camera (same as external)
+  intCamera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth / window.innerHeight,
+    0.01,
+    50
+  );
+  intCamera.position.set(0, -0.45, 2.2);
+
+  // Renderer
+  intRenderer = new THREE.WebGLRenderer({ antialias: true });
+  intRenderer.setSize(window.innerWidth, window.innerHeight);
+  intRenderer.setPixelRatio(window.devicePixelRatio);
+  intRenderer.outputColorSpace = THREE.SRGBColorSpace;
+  intRenderer.shadowMap.enabled = true;
+  intRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.getElementById('overlay-internal').appendChild(intRenderer.domElement);
+
+  // OrbitControls (same as external)
+  intOrbitControls = new OrbitControls(intCamera, intRenderer.domElement);
+  intOrbitControls.enableDamping = true;
+  intOrbitControls.dampingFactor = 0.08;
+  intOrbitControls.target.set(0, -0.4, 0);
+  intOrbitControls.minDistance = 0.8;
+  intOrbitControls.maxDistance = 5;
+  intOrbitControls.maxPolarAngle = Math.PI * 0.85;
+  intOrbitControls.update();
+
+  // Lighting (same as external)
+  intScene.add(new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1.5));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  dirLight.position.set(1, 2, 1.5);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  dirLight.shadow.camera.near = 0.1;
+  dirLight.shadow.camera.far = 10;
+  dirLight.shadow.camera.left = -2;
+  dirLight.shadow.camera.right = 2;
+  dirLight.shadow.camera.top = 2;
+  dirLight.shadow.camera.bottom = -2;
+  intScene.add(dirLight);
+  const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+  dirLight2.position.set(-1, 0.5, -1);
+  intScene.add(dirLight2);
+
+  // Additional blue lights for internal section
+  const blueLightLeft = new THREE.DirectionalLight(0x4169e1, 0.8);
+  blueLightLeft.position.set(-3, 1, 0);
+  intScene.add(blueLightLeft);
+
+  const blueLightRight = new THREE.DirectionalLight(0x4169e1, 0.8);
+  blueLightRight.position.set(3, 1, 0);
+  intScene.add(blueLightRight);
+
+  // Bloom post-processing (same as external)
+  intComposer = new EffectComposer(intRenderer);
+  intComposer.addPass(new RenderPass(intScene, intCamera));
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    0.6, 0.5, 0.7
+  );
+  intComposer.addPass(bloomPass);
+
+  // Shadow floor
+  const floorGeo = new THREE.PlaneGeometry(4, 4);
+  const floorMat = new THREE.ShadowMaterial({ opacity: 0.35 });
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.set(0, -0.95, 0);
+  floor.receiveShadow = true;
+  intScene.add(floor);
+
+  // Load miniDes.glb
+  const loader = new GLTFLoader();
+  loader.load(
+    'models/miniDes.glb',
+    (gltf) => {
+      intModel = gltf.scene;
+      intModel.scale.set(1.75, 1.75, 1.75);
+      intModel.position.set(0, -0.7, 0);
+
+      // Start with model invisible for fade-in
+      intModel.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.material = child.material.clone();
+          child.material.transparent = true;
+          child.material.opacity = 0;
+        }
+      });
+
+      intScene.add(intModel);
+
+      // Fade in over 2 seconds
+      const fadeDuration = 2000; // 2 seconds
+      const startTime = Date.now();
+      
+      function fadeIn() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / fadeDuration, 1);
+        
+        intModel.traverse((child) => {
+          if (child.isMesh && child.material.transparent) {
+            child.material.opacity = progress;
+          }
+        });
+        
+        if (progress < 1) {
+          requestAnimationFrame(fadeIn);
+        }
+      }
+      
+      fadeIn();
+
+      // Auto-play all animations in loop
+      if (gltf.animations && gltf.animations.length > 0) {
+        intMixer = new THREE.AnimationMixer(intModel);
+        gltf.animations.forEach((clip) => {
+          const action = intMixer.clipAction(clip);
+          action.setLoop(THREE.LoopRepeat);
+          action.play();
+        });
+      }
+
+      console.log('Internal model loaded (miniDes.glb)');
+    },
+    undefined,
+    (err) => console.error('Error loading miniDes.glb:', err)
+  );
+
+  intActive = true;
+  intClock = new THREE.Clock();
+  intRenderer.setAnimationLoop(renderInternal);
+
+  // Wire buttons
+  document.getElementById('btn-back-splash-internal').addEventListener('click', stopInternalExperience);
+  document.getElementById('btn-music-internal').addEventListener('click', toggleMusic);
+
+  // Resize handler
+  window.addEventListener('resize', onIntWindowResize);
+
+  startMusic();
+}
+
+function renderInternal() {
+  const delta = intClock.getDelta();
+  if (intMixer) intMixer.update(delta);
+  intOrbitControls.update();
+  intComposer.render();
+}
+
+function onIntWindowResize() {
+  if (!intCamera || !intRenderer) return;
+  intCamera.aspect = window.innerWidth / window.innerHeight;
+  intCamera.updateProjectionMatrix();
+  intRenderer.setSize(window.innerWidth, window.innerHeight);
+  if (intComposer) intComposer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function stopInternalExperience() {
+  intActive = false;
+
+  // Stop music
+  if (musicPlaying) stopMusic();
+
+  // Stop and reset animations
+  if (intMixer) {
+    intMixer.stopAllAction();
+    intMixer = null;
+  }
+
+  // Stop render loop
+  if (intRenderer) intRenderer.setAnimationLoop(null);
+
+  // Remove canvas from DOM so a fresh one is created on re-entry
+  if (intRenderer && intRenderer.domElement && intRenderer.domElement.parentNode) {
+    intRenderer.domElement.parentNode.removeChild(intRenderer.domElement);
+  }
+
+  // Dispose Three.js objects
+  if (intScene) {
+    intScene.traverse((child) => {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach(mat => mat.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+  }
+
+  // Clean up
+  intScene = null;
+  intCamera = null;
+  intRenderer = null;
+  intOrbitControls = null;
+  intComposer = null;
+  intModel = null;
+
+  window.removeEventListener('resize', onIntWindowResize);
+
+  // Show splash
+  document.getElementById('overlay-internal').classList.add('hidden');
   document.getElementById('splash').classList.remove('hidden');
 }

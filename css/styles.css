@@ -117,6 +117,31 @@ body {
   transform: scale(0.97);
 }
 
+#btn-internal {
+  display: block;
+  margin: 16px auto 0;
+  background: linear-gradient(135deg, #d63447, #ff6b6b);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 44px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(255, 107, 107, 0.3);
+}
+
+#btn-internal:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 32px rgba(255, 107, 107, 0.5);
+}
+
+#btn-internal:active {
+  transform: scale(0.97);
+}
+
 /* ── External equipment overlay ──────────────────────────── */
 #overlay-external {
   position: fixed;
@@ -239,6 +264,134 @@ body {
 }
 
 #btn-music-ext.playing {
+  border-color: #6ec6ff;
+  color: #6ec6ff;
+}
+
+/* ── Internal equipment overlay ──────────────────────────── */
+#overlay-internal {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#overlay-internal canvas {
+  pointer-events: all;
+}
+
+#internal-instructions {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 18px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#internal-info {
+  position: absolute;
+  bottom: 24px;
+  left: 16px;
+  background: rgba(10, 10, 30, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 16px 20px;
+  color: #fff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+#internal-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #ff6b6b;
+  letter-spacing: 0.5px;
+}
+
+#internal-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#internal-info li {
+  font-size: 16px;
+  padding: 4px 0;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#internal-info li:last-child {
+  border-bottom: none;
+}
+
+#btn-back-splash-internal {
+  position: absolute;
+  top: 50px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ff6b6b;
+  border: 2px solid #ff6b6b;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 29px;
+  font-weight: 900;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: all;
+  transition: border-color 0.2s, color 0.2s;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+#btn-back-splash-internal:hover {
+  border-color: #ff8787;
+  color: #ff8787;
+}
+
+#btn-music-internal {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+#btn-music-internal:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #fff;
+}
+
+#btn-music-internal.playing {
   border-color: #6ec6ff;
   color: #6ec6ff;
 }
@@ -481,6 +634,7 @@ body {
   #splash-hint        { font-size: 11px; }
   #btn-start          { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
   #btn-external        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
+  #btn-internal        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
 
   /* External overlay */
   #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
@@ -519,6 +673,7 @@ body {
   #splash-hint        { font-size: 15px; }
   #btn-start          { font-size: 19px; padding: 18px 60px; }
   #btn-external        { font-size: 17px; padding: 16px 52px; }
+  #btn-internal        { font-size: 17px; padding: 16px 52px; }
 
   /* Instructions */
   #instructions       { font-size: 20px; padding: 14px 28px; }
