@@ -26,7 +26,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #0a1628 0%, #0d2847 40%, #103a6e 100%);
+  background: linear-gradient(160deg, #dcefff 0%, #89c2ff 30%, #1b4584 70%, #030c1a 100%);
 }
 
 #splash-content {
@@ -36,17 +36,13 @@ body {
 }
 
 #splash-logo {
-  font-family: 'Orbitron', monospace;
-  font-size: 52px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  color: #fff;
-  margin-bottom: 8px;
-  text-shadow: 0 0 30px rgba(110, 198, 255, 0.5);
+  width: auto;
+  height: 72px;
+  margin-bottom: 26px;
 }
 
 #splash-title {
-  font-size: 18px;
+  font-size: 40.5px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 20px;
@@ -57,7 +53,7 @@ body {
 #splash-subtitle {
   font-size: 26px;
   font-weight: 700;
-  color: #6ec6ff;
+  color: #152ea9;
   line-height: 1.3;
   margin-bottom: 12px;
 }
@@ -81,6 +77,7 @@ body {
   letter-spacing: 2px;
   cursor: pointer;
   transition: transform 0.2s, border-color 0.2s, color 0.2s;
+  margin-top: 40px;
 }
 
 #btn-start:hover {
@@ -641,7 +638,7 @@ body {
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
   /* Splash */
-  #splash-logo        { font-size: 36px; letter-spacing: 5px; }
+  #splash-logo        { height: 57.6px; } /* 72px × 0.8 = 57.6px */
   #splash-title       { font-size: 14px; }
   #splash-subtitle    { font-size: 20px; }
   #splash-hint        { font-size: 11px; }
@@ -678,6 +675,13 @@ body {
 
   /* Music toggle */
   #btn-music          { width: 34px; height: 34px; font-size: 15px; bottom: 18px; right: 10px; top: auto; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Responsive — iPad (768px - 1024px)
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  #splash-title { font-size: 20.25px; } /* 40.5px × 0.5 = 20.25px */
 }
 
 /* ══════════════════════════════════════════════════════════════

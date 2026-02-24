@@ -328,9 +328,9 @@ function initScene() {
   bgCanvas.height = 512;
   const bgCtx = bgCanvas.getContext('2d');
   const grad = bgCtx.createLinearGradient(0, 0, 0, 512);
-  grad.addColorStop(0, '#3a8fd4');
-  grad.addColorStop(0.3, '#1a5a9e');
-  grad.addColorStop(0.7, '#0a2a5a');
+  grad.addColorStop(0, '#84b2d7ff');
+  grad.addColorStop(0.3, '#689acfff');
+  grad.addColorStop(0.7, '#1b4584');
   grad.addColorStop(1, '#030c1a');
   bgCtx.fillStyle = grad;
   bgCtx.fillRect(0, 0, 2, 512);
@@ -1869,9 +1869,9 @@ function startExternalExperience() {
   bgCanvas.height = 512;
   const bgCtx = bgCanvas.getContext('2d');
   const grad = bgCtx.createLinearGradient(0, 0, 0, 512);
-  grad.addColorStop(0, '#3a8fd4');
-  grad.addColorStop(0.3, '#1a5a9e');
-  grad.addColorStop(0.7, '#0a2a5a');
+  grad.addColorStop(0, '#84b2d7ff');
+  grad.addColorStop(0.3, '#689acfff');
+  grad.addColorStop(0.7, '#1b4584');
   grad.addColorStop(1, '#030c1a');
   bgCtx.fillStyle = grad;
   bgCtx.fillRect(0, 0, 2, 512);
@@ -2082,9 +2082,9 @@ function startInternalExperience() {
   bgCanvas.height = 512;
   const bgCtx = bgCanvas.getContext('2d');
   const grad = bgCtx.createLinearGradient(0, 0, 0, 512);
-  grad.addColorStop(0, '#3a8fd4');
-  grad.addColorStop(0.3, '#1a5a9e');
-  grad.addColorStop(0.7, '#0a2a5a');
+  grad.addColorStop(0, '#84b2d7ff');
+  grad.addColorStop(0.3, '#689acfff');
+  grad.addColorStop(0.7, '#1b4584');
   grad.addColorStop(1, '#030c1a');
   bgCtx.fillStyle = grad;
   bgCtx.fillRect(0, 0, 2, 512);
