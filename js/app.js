@@ -105,9 +105,64 @@ document.getElementById('btn-start').addEventListener('click', startExperience);
 document.getElementById('btn-external').addEventListener('click', startExternalExperience);
 document.getElementById('btn-internal').addEventListener('click', startInternalExperience);
 
+function setupFadeInElements() {
+  // Get all elements that should fade in
+  const elements = [
+    '#instructions',
+    '#panel',
+    '#connecting-lines',
+    '#btn-back-main',
+    '#btn-music',
+    '#control-buttons',
+    '.ctrl-btn'
+  ];
+
+  // Add fade-in class to all elements
+  elements.forEach(selector => {
+    const els = document.querySelectorAll(selector);
+    els.forEach(el => {
+      el.classList.add('fade-in-element');
+    });
+  });
+
+  // Trigger fade-in with staggered delays
+  setTimeout(() => {
+    document.querySelector('#instructions')?.classList.add('visible');
+  }, 200);
+
+  setTimeout(() => {
+    document.querySelector('#panel')?.classList.add('visible');
+  }, 400);
+
+  setTimeout(() => {
+    document.querySelector('#connecting-lines')?.classList.add('visible');
+  }, 600);
+
+  setTimeout(() => {
+    document.querySelector('#btn-back-main')?.classList.add('visible');
+    document.querySelector('#btn-music')?.classList.add('visible');
+  }, 800);
+
+  setTimeout(() => {
+    document.querySelector('#control-buttons')?.classList.add('visible');
+  }, 1000);
+
+  setTimeout(() => {
+    const buttons = document.querySelectorAll('.ctrl-btn');
+    buttons.forEach((btn, index) => {
+      setTimeout(() => {
+        btn.classList.add('visible');
+      }, index * 100);
+    });
+  }, 1200);
+}
+
 function startExperience() {
   document.getElementById('splash').classList.add('hidden');
   document.getElementById('overlay').classList.remove('hidden');
+
+  // Add fade-in classes to all elements
+  setupFadeInElements();
 
   // Init audio context (must be after user gesture)
   initAudio();
@@ -667,7 +722,7 @@ function updateEntranceEffect() {
   const easeScale = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 
   // Smooth opacity fade
-  const easeOpacity = 1 - Math.pow(1 - t, 3);
+  const easeOpacity = 1 - Math.pow(1.2 - t, 3);
 
   // Mini split target scale: 2
   const ms = easeScale * 2;
@@ -1224,6 +1279,12 @@ function resetExperience() {
   document.getElementById('overlay').classList.add('hidden');
   document.getElementById('splash').classList.remove('hidden');
   document.getElementById('instructions').textContent = 'Cargando modelos...';
+
+  // Remove fade-in classes so animation can play again
+  const fadeElements = document.querySelectorAll('.fade-in-element');
+  fadeElements.forEach(el => {
+    el.classList.remove('fade-in-element', 'visible');
+  });
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2107,17 +2168,48 @@ function startInternalExperience() {
   loader.load(
     'models/miniDes.glb',
     (gltf) => {
+      console.log('miniDes.glb loaded successfully');
+      console.log('Scene:', gltf.scene);
+      console.log('Animations:', gltf.animations);
+      
       intModel = gltf.scene;
       intModel.scale.set(1.75, 1.75, 1.75);
       intModel.position.set(0, -0.7, 0);
 
-      // Start with model invisible for fade-in
+      // Debug and fix textures
       intModel.traverse((child) => {
         if (child.isMesh) {
-          child.castShadow = true;
-          child.material = child.material.clone();
-          child.material.transparent = true;
-          child.material.opacity = 0;
+          console.log('Mesh found:', child.name, 'Material:', child.material);
+          
+          // Check for texture issues
+          if (child.material) {
+            if (child.material.map) {
+              console.log('Texture map found for', child.name, ':', child.material.map);
+              child.material.map.needsUpdate = true;
+            }
+            if (child.material.normalMap) {
+              console.log('Normal map found for', child.name);
+              child.material.normalMap.needsUpdate = true;
+            }
+            if (child.material.roughnessMap) {
+              console.log('Roughness map found for', child.name);
+              child.material.roughnessMap.needsUpdate = true;
+            }
+            if (child.material.metalnessMap) {
+              console.log('Metalness map found for', child.name);
+              child.material.metalnessMap.needsUpdate = true;
+            }
+            
+            // Ensure proper material properties
+            child.material.needsUpdate = true;
+            child.material.transparent = true;
+            child.material.opacity = 0; // Start invisible for fade-in
+            child.castShadow = true;
+            child.receiveShadow = true;
+            
+            // Clone material to avoid conflicts
+            child.material = child.material.clone();
+          }
         }
       });
 
@@ -2154,10 +2246,16 @@ function startInternalExperience() {
         });
       }
 
-      console.log('Internal model loaded (miniDes.glb)');
+      console.log('Internal model loaded (miniDes.glb) with textures checked');
     },
-    undefined,
-    (err) => console.error('Error loading miniDes.glb:', err)
+    (progress) => {
+      console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+    },
+    (err) => {
+      console.error('Error loading miniDes.glb:', err);
+      console.error('Detailed error:', err.message || err);
+      if (err.stack) console.error('Stack trace:', err.stack);
+    }
   );
 
   intActive = true;

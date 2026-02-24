@@ -70,22 +70,23 @@ body {
 
 #btn-start {
   display: inline-block;
-  background: linear-gradient(135deg, #2196F3, #6ec6ff);
+  background: transparent;
   color: #fff;
-  border: none;
+  border: 2px solid #6ec6ff;
   border-radius: 50px;
   padding: 14px 44px;
   font-size: 15px;
   font-weight: 700;
+  font-family: 'Roboto Condensed', sans-serif;
   letter-spacing: 2px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 24px rgba(33, 150, 243, 0.4);
+  transition: transform 0.2s, border-color 0.2s, color 0.2s;
 }
 
 #btn-start:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 32px rgba(33, 150, 243, 0.6);
+  border-color: #8dd5ff;
+  color: #8dd5ff;
 }
 
 #btn-start:active {
@@ -95,22 +96,23 @@ body {
 #btn-external {
   display: block;
   margin: 16px auto 0;
-  background: linear-gradient(135deg, #1a7a3a, #38DC00);
+  background: transparent;
   color: #fff;
-  border: none;
+  border: 2px solid #6ec6ff;
   border-radius: 50px;
   padding: 14px 44px;
   font-size: 15px;
   font-weight: 700;
+  font-family: 'Roboto Condensed', sans-serif;
   letter-spacing: 2px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 24px rgba(56, 220, 0, 0.3);
+  transition: transform 0.2s, border-color 0.2s, color 0.2s;
 }
 
 #btn-external:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 32px rgba(56, 220, 0, 0.5);
+  border-color: #8dd5ff;
+  color: #8dd5ff;
 }
 
 #btn-external:active {
@@ -120,22 +122,23 @@ body {
 #btn-internal {
   display: block;
   margin: 16px auto 0;
-  background: linear-gradient(135deg, #d63447, #ff6b6b);
+  background: transparent;
   color: #fff;
-  border: none;
+  border: 2px solid #6ec6ff;
   border-radius: 50px;
   padding: 14px 44px;
   font-size: 15px;
   font-weight: 700;
+  font-family: 'Roboto Condensed', sans-serif;
   letter-spacing: 2px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 24px rgba(255, 107, 107, 0.3);
+  transition: transform 0.2s, border-color 0.2s, color 0.2s;
 }
 
 #btn-internal:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 32px rgba(255, 107, 107, 0.5);
+  border-color: #8dd5ff;
+  color: #8dd5ff;
 }
 
 #btn-internal:active {
@@ -341,8 +344,8 @@ body {
   top: 50px;
   left: 16px;
   background: rgba(0, 0, 0, 0.35);
-  color: #ff6b6b;
-  border: 2px solid #ff6b6b;
+  color: #38DC00;
+  border: 2px solid #38DC00;
   border-radius: 50%;
   width: 55px;
   height: 55px;
@@ -361,8 +364,8 @@ body {
 }
 
 #btn-back-splash-internal:hover {
-  border-color: #ff8787;
-  color: #ff8787;
+  border-color: #4cff33;
+  color: #4cff33;
 }
 
 #btn-music-internal {
@@ -413,6 +416,16 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 10;
+}
+
+/* Fade-in animation classes */
+.fade-in-element {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-in-element.visible {
+  opacity: 1;
 }
 
 /* ── Instructions ────────────────────────────────────────── */
