@@ -2008,6 +2008,22 @@ function startExternalExperience() {
   // Resize handler
   window.addEventListener('resize', onExtWindowResize);
 
+  // Show 80.png image after 2 seconds with fade-in
+  setTimeout(() => {
+    const badge = document.getElementById('external-badge');
+    if (badge) {
+      badge.classList.add('show');
+    }
+  }, 2000);
+
+  // Show alta.png image after 3 seconds with fade-in
+  setTimeout(() => {
+    const badgeAlta = document.getElementById('external-badge-alta');
+    if (badgeAlta) {
+      badgeAlta.classList.add('show');
+    }
+  }, 3000);
+
   startMusic();
 }
 
@@ -2060,6 +2076,16 @@ function stopExternalExperience() {
   extMixer = null;
 
   window.removeEventListener('resize', onExtWindowResize);
+
+  // Hide 80.png and alta.png images
+  const badge = document.getElementById('external-badge');
+  if (badge) {
+    badge.classList.remove('show');
+  }
+  const badgeAlta = document.getElementById('external-badge-alta');
+  if (badgeAlta) {
+    badgeAlta.classList.remove('show');
+  }
 
   // Show splash
   document.getElementById('overlay-external').classList.add('hidden');
