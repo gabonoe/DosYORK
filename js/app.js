@@ -2284,6 +2284,14 @@ function startInternalExperience() {
   // Resize handler
   window.addEventListener('resize', onIntWindowResize);
 
+  // Show jap.png image after 2 seconds with fade-in
+  setTimeout(() => {
+    const badge = document.getElementById('internal-badge');
+    if (badge) {
+      badge.classList.add('show');
+    }
+  }, 2000);
+
   startMusic();
 }
 
@@ -2345,6 +2353,12 @@ function stopInternalExperience() {
   intModel = null;
 
   window.removeEventListener('resize', onIntWindowResize);
+
+  // Hide jap.png image
+  const badge = document.getElementById('internal-badge');
+  if (badge) {
+    badge.classList.remove('show');
+  }
 
   // Show splash
   document.getElementById('overlay-internal').classList.add('hidden');

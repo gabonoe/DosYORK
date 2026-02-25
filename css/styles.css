@@ -185,6 +185,23 @@ body {
 }
 
 
+#internal-badge {
+  position: absolute;
+  top: 3%;
+  right: 10%;
+  transform: none;
+  width: auto;
+  height: 144px;  /* Same as external badge */
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+#internal-badge.show {
+  opacity: 1;
+}
+
 #external-info {
   position: absolute;
   bottom: 24px;
@@ -666,7 +683,8 @@ body {
 
   /* External overlay */
   #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
-  #external-badge       { height: 96px; top: 5%; right: -2%; }  /* Reduced by 40% (160px × 0.6 = 96px) */
+  #external-badge       { height: 96px; top: 6%; right: 0%; }  /* Reduced by 40% (160px × 0.6 = 96px) */
+  #internal-badge      { height: 96px; top: 6%; right: 0%; }  /* Same as external badge */
   #external-info       { padding: 10px 14px; border-radius: 12px; bottom: 16px; left: 10px; }
   #internal-info       { padding: 10px 14px; border-radius: 12px; bottom: 16px; left: 10px; }
   #internal-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
