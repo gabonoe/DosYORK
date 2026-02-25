@@ -2016,14 +2016,7 @@ function startExternalExperience() {
     }
   }, 2000);
 
-  // Show alta.png image after 3 seconds with fade-in
-  setTimeout(() => {
-    const badgeAlta = document.getElementById('external-badge-alta');
-    if (badgeAlta) {
-      badgeAlta.classList.add('show');
-    }
-  }, 3000);
-
+  
   startMusic();
 }
 
@@ -2077,14 +2070,10 @@ function stopExternalExperience() {
 
   window.removeEventListener('resize', onExtWindowResize);
 
-  // Hide 80.png and alta.png images
+  // Hide 80.png image
   const badge = document.getElementById('external-badge');
   if (badge) {
     badge.classList.remove('show');
-  }
-  const badgeAlta = document.getElementById('external-badge-alta');
-  if (badgeAlta) {
-    badgeAlta.classList.remove('show');
   }
 
   // Show splash
