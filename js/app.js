@@ -104,6 +104,7 @@ let intActive = false;
 document.getElementById('btn-start').addEventListener('click', startExperience);
 document.getElementById('btn-external').addEventListener('click', startExternalExperience);
 document.getElementById('btn-internal').addEventListener('click', startInternalExperience);
+document.getElementById('btn-video').addEventListener('click', startVideoExperience);
 
 function setupFadeInElements() {
   // Get all elements that should fade in
@@ -2363,4 +2364,39 @@ function stopInternalExperience() {
   // Show splash
   document.getElementById('overlay-internal').classList.add('hidden');
   document.getElementById('splash').classList.remove('hidden');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Video experience
+// ══════════════════════════════════════════════════════════════
+function startVideoExperience() {
+  document.getElementById('splash').classList.add('hidden');
+  document.getElementById('overlay-video').classList.remove('hidden');
+
+  // Stop any existing music when entering video section
+  if (musicPlaying) stopMusic();
+
+  // Wire back button
+  document.getElementById('btn-back-splash-video').addEventListener('click', stopVideoExperience);
+}
+
+function stopVideoExperience() {
+  // Stop and reset video playback
+  const videoFrame = document.getElementById('video-frame');
+  if (videoFrame) {
+    // Remove the src to stop the video
+    const currentSrc = videoFrame.src;
+    videoFrame.src = '';
+    // Restore the src to reset the video for next time
+    setTimeout(() => {
+      videoFrame.src = currentSrc;
+    }, 100);
+  }
+
+  // Show splash
+  document.getElementById('overlay-video').classList.add('hidden');
+  document.getElementById('splash').classList.remove('hidden');
+
+  // Remove event listener to prevent duplicates
+  document.getElementById('btn-back-splash-video').removeEventListener('click', stopVideoExperience);
 }

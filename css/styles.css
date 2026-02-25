@@ -142,6 +142,32 @@ body {
   transform: scale(0.97);
 }
 
+#btn-video {
+  display: block;
+  margin: 16px auto 0;
+  background: transparent;
+  color: #6ec6ff;
+  border: 2px solid #6ec6ff;
+  border-radius: 50px;
+  padding: 14px 44px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Roboto Condensed', sans-serif;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s, color 0.2s;
+}
+
+#btn-video:hover {
+  transform: scale(1.05);
+  border-color: #8dd5ff;
+  color: #8dd5ff;
+}
+
+#btn-video:active {
+  transform: scale(0.97);
+}
+
 /* ── External equipment overlay ──────────────────────────── */
 #overlay-external {
   position: fixed;
@@ -344,6 +370,66 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   pointer-events: none;
+}
+
+/* Video overlay */
+#overlay-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  /* Same gradient background as external section */
+  background: linear-gradient(to bottom, #84b2d7ff 0%, #689acfff 30%, #1b4584 70%, #030c1a 100%);
+}
+
+#video-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+#video-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#btn-back-splash-video {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #38DC00;
+  border: 2px solid #38DC00;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: all;
+  transition: border-color 0.2s, color 0.2s;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+#btn-back-splash-video:hover {
+  border-color: #4cff33;
+  color: #4cff33;
 }
 
 #internal-info h3 {
@@ -680,6 +766,7 @@ body {
   #btn-start          { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
   #btn-external        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
   #btn-internal        { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
+  #btn-video           { font-size: 12px; padding: 11px 30px; letter-spacing: 1.5px; white-space: nowrap; }
 
   /* External overlay */
   #external-instructions { font-size: 13px; padding: 8px 16px; top: 10px; }
@@ -712,6 +799,10 @@ body {
 
   /* Music toggle */
   #btn-music          { width: 34px; height: 34px; font-size: 15px; bottom: 18px; right: 10px; top: auto; }
+
+  /* Video overlay */
+  #video-container    { width: 95%; max-width: none; }
+  #btn-back-splash-video { width: 40px; height: 40px; font-size: 18px; top: 15px; left: 15px; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -733,6 +824,7 @@ body {
   #btn-start          { font-size: 19px; padding: 18px 60px; }
   #btn-external        { font-size: 17px; padding: 16px 52px; }
   #btn-internal        { font-size: 17px; padding: 16px 52px; }
+  #btn-video           { font-size: 17px; padding: 16px 52px; }
 
   /* Instructions */
   #instructions       { font-size: 20px; padding: 14px 28px; }
